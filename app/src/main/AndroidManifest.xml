@@ -13,6 +13,9 @@
         android:theme="@style/Theme.StudentManagement"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activity_Edit_Student"
+            android:exported="true" />
+        <activity
             android:name=".Activity_Add_Student"
             android:exported="true" />
         <activity

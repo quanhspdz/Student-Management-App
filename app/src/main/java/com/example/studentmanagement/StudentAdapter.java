@@ -1,6 +1,9 @@
 package com.example.studentmanagement;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +66,43 @@ public class StudentAdapter extends BaseAdapter {
 
         holder.txtName.setText(arrayStudent.get(i).getName());
         holder.txtAddress.setText(arrayStudent.get(i).getAddress());
-        holder.txtBirthYear.setText(arrayStudent.get(i).getBirthYear() + "");
+        holder.txtBirthYear.setText(String.valueOf(arrayStudent.get(i).getBirthYear()));
+
+        holder.imgBtnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, Activity_Edit_Student.class);
+                StudentHolder.currentStudent = arrayStudent.get(i);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.imgBtnDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteAlert(arrayStudent.get(i));
+            }
+        });
 
         return view;
+    }
+    public void showDeleteAlert(StudentForm student) {
+        AlertDialog.Builder deleteAlertDialog = new AlertDialog.Builder(context);
+        deleteAlertDialog.setMessage("Do you really want to delete " + student.getName() + " ?");
+        deleteAlertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        deleteAlertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MySQL_Action.deleteStudent(context, student, UrlHolder.deleteUrl);
+            }
+        });
+
+        deleteAlertDialog.show();
+
     }
 }

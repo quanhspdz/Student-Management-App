@@ -34,10 +34,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listViewStudent;
-    StudentAdapter adapter;
+    public static ListView listViewStudent;
+    public static StudentAdapter adapter;
     ArrayList<StudentForm> arrayStudent;
-    final String url = "http://192.168.31.214/android-webservice/getData.php";
+    final String url = UrlHolder.getDataUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,42 +45,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listViewStudent = findViewById(R.id.listViewStudent);
-        arrayStudent = new ArrayList<>();
+        arrayStudent =  new ArrayList<>();
         adapter = new StudentAdapter(MainActivity.this, R.layout.each_item_in_list, arrayStudent);
+        arrayStudent = MySQL_Action.getDataFromWeb(MainActivity.this, url);
+        adapter.notifyDataSetChanged();
         listViewStudent.setAdapter(adapter);
 
-    }
-    private void getDataFromWeb(String url) {
-        arrayStudent.clear();
-
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject object = response.getJSONObject(i);
-                                StudentForm student = new StudentForm(object.getInt("id"),
-                                                    object.getString("name"),
-                                                    object.getInt("yearBirth"),
-                                                    object.getString("address"));
-                                arrayStudent.add(student);
-                            } catch (JSONException e) {
-                                Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        requestQueue.add(jsonArrayRequest);
     }
 
     //to show add menu on app bar
@@ -101,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case R.id.menu_refresh: {
-                getDataFromWeb(url);
+                arrayStudent = MySQL_Action.getDataFromWeb(MainActivity.this, url);
                 break;
             }
         }
@@ -111,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        getDataFromWeb(url);
+        arrayStudent = MySQL_Action.getDataFromWeb(MainActivity.this, url);
         super.onResume();
     }
 }
