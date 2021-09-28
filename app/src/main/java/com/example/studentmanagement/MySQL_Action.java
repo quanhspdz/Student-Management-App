@@ -68,12 +68,13 @@ public class MySQL_Action {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.equals("success")) {
-                            Toast.makeText(context, "Update successfully!", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(context, "Update failure!", Toast.LENGTH_SHORT).show();
-                        }
+//                        if (response.equals("success")) {
+//                            Toast.makeText(context, "Update successfully!", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else {
+//                            Toast.makeText(context, "Update failure!", Toast.LENGTH_SHORT).show();
+//                        }
+                        Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
